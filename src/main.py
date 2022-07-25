@@ -4,6 +4,8 @@ import os
 import csv
 import pandas as pd
 
+from logisticRegression import logistic_regression
+
 
 def checkFileExists(fileName):
     path_to_folder = os.path.abspath(os.path.join(
@@ -31,22 +33,20 @@ def main():
     print("3. Iterative Dichotomiser 3 (ID3, Only for categorical datas")
     print()
     while True:
-        try:
-            method = int(input("Enter the number: "))
-            if method == 1:
-                print("You choose K-Nearest Neighbors method.")
-                knn_method(data)
-                break
-            elif method == 2:
-                print("You choose Logistic Regression method.")
-                break
-            elif method == 3:
-                print("You choose Iterative Dichotomiser 3 (ID3) method.")
-                break
-            else:
-                print("Invalid input. Please try again.")
-        except ValueError:
-            print("Try again, you can only input the numbers 1 to 3.")
+        method = int(input("Enter the number: "))
+        if method == 1:
+            print("You choose K-Nearest Neighbors method.")
+            knn_method(data)
+            break
+        elif method == 2:
+            print("You choose Logistic Regression method.")
+            logistic_regression(data)
+            break
+        elif method == 3:
+            print("You choose Iterative Dichotomiser 3 (ID3) method.")
+            break
+        else:
+            print("Invalid input. Please try again.")
 
 
 main()
