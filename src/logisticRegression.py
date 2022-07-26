@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 import statistics
+import copy
 
 # For the logistic regression to work, the data must be in the form of a pandas dataframe
 # Logistic regression is a classification algorithm similar to linear regression
@@ -21,6 +22,10 @@ def create_sigmoid_function(z_value):
 # The loss function serves as a way to measure how well the model is performing
 # The user can use this to determine the number of epochs to be used in the gradient descent algorithm
 # The user can also use this to determmine the learning rate for the gradient descent algorithm
+# IMPORTANT : You must use 0 and 1 as the labels for the target data. Else, the loss function will result in negative value as a result of cross-entropy error.
+# Use normalizeCSV.py to normalize the data before using logistic regression
+# Negative loss value can also be caused by the model's weights being too large or too small
+# If the loss is too great, consider decreasing the learning rate and/or decreasing the number of epochs
 def loss_function(sigmoid_function, target_data):
     return (- target_data * np.log(sigmoid_function) - (1 - target_data) * np.log(1 - sigmoid_function)).mean()
 
@@ -35,21 +40,17 @@ def loss_function(sigmoid_function, target_data):
 def gradient_descent(epochs, learning_rate, features_data, target_data):
     # When first initializing the weights, the weights are set to 0
     theta = np.zeros(features_data.shape[1])
-    print(theta.shape)
     for iteration in range(epochs):
         z_value = np.dot(features_data, theta)
         sigmoid_function = create_sigmoid_function(z_value)
-        print(features_data.T.shape)
-        print(sigmoid_function.shape)
-        print(target_data.shape)
-        gradient = (features_data.T * (sigmoid_function -
-                    target_data)) / target_data.size
+        gradient = np.dot(
+            features_data.T, (sigmoid_function - target_data)) / target_data.size
         # Update the weights (theta) as the epochs are iterated
-        theta -= learning_rate * gradient
-        # As epochs may be large, the loss will only be printed every 10000 epochs
-        if iteration % 10000 == 0:
+        theta -= (learning_rate * gradient)
+        # As epochs may be large, the loss will only be printed every 100000 epochs
+        if (iteration + 1) % 100000 == 0:
             print("Epoch: {} | Loss: {}".format(
-                iteration, loss_function(sigmoid_function, target_data)))
+                iteration + 1, loss_function(sigmoid_function, target_data)))
     return theta
 
 
@@ -72,7 +73,7 @@ def logistic_regression(data):
     data_length = len(data)
     attribute_data = data.iloc[:, :-1]
     label_data = data.iloc[:, -1]
-    unique_label = label_data.unique()
+    unique_label = data.iloc[:, -1].unique()
     num_of_attr_data = attribute_data.shape[1]
     print("The number of attributes in the data is {} attributes".format(
         num_of_attr_data))
@@ -93,17 +94,18 @@ def logistic_regression(data):
     epochs = int(input("Enter the number of epochs (in int): "))
     learning_rate = float(input("Enter the learning rate (in float/int): "))
     updated_theta = gradient_descent(
-        epochs, learning_rate, attribute_data, np.array(label_data))
+        epochs, learning_rate, attribute_data.to_numpy(), label_data.to_numpy())
     # By default, the threshold is set to 0.5
     # If the user wants to change the threshold, they can input the new threshold
-    threshold = int(input("Enter the threshold (in float, between 0 and 1): "))
+    threshold = float(
+        input("Enter the threshold (in float, between 0 and 1): "))
     # If the probability returned from the sigmoid function is greater than or equal to the threshold, the model will predict the label as 1 (or the most common value)
     # Or, if it's less, it will return the least common value
-    most_common_value = statistics.multimode(label_data)
-    least_common_value = unique_label.remove(most_common_value)[0]
+    most_common_value = statistics.multimode(label_data)[0]
+    least_common_value = unique_label[unique_label != most_common_value][0]
     if predict_verdict(updated_theta, target_data, threshold) == 1:
-        print("The model's prediction from the given data is {}".format(
+        print("The model's prediction from the given data is '{}'".format(
             unique_label_explained[most_common_value]))
     else:
-        print("The model's prediction from the given data is {}".format(
+        print("The model's prediction from the given data is '{}'".format(
             unique_label_explained[least_common_value]))
