@@ -1,4 +1,4 @@
-patient_age,1900s_year_of_operation,num_of_positive_axilliary_nodes_detected,isAliveAfter5Years
+patient_age,1900s_year_of_operation,num_of_positive_axilliary_nodes_detected,target
 30,64,1,1
 30,62,3,1
 30,65,0,1

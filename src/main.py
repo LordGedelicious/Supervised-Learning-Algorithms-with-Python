@@ -1,4 +1,5 @@
 # Import necessary libraries
+from id3 import id3_main_algorithm
 from knn import knn_method
 import os
 import csv
@@ -30,7 +31,7 @@ def main():
     print("Please select the method you want to use: ")
     print("1. K-Nearest Neighbors (Only for numerical datas)")
     print("2. Logistic Regression (Only for numerical datas)")
-    print("3. Iterative Dichotomiser 3 (ID3, Only for categorical datas")
+    print("3. Iterative Dichotomiser 3 (ID3, Only for categorical datas)")
     print()
     while True:
         method = int(input("Enter the number: "))
@@ -44,6 +45,7 @@ def main():
             break
         elif method == 3:
             print("You choose Iterative Dichotomiser 3 (ID3) method.")
+            id3_main_algorithm(data)
             break
         else:
             print("Invalid input. Please try again.")
