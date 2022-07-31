@@ -24,7 +24,7 @@ Jawablah pertanyaan berikut!
 Isi direktori adalah sebagai berikut:
 ```
 ├── docs [berisikan answers.pdf yang berisi jawaban dari pertanyaan wajib]
-├── src [berisikan answers.pdf yang berisi jawaban dari pertanyaan wajib]
+├── src
     ├── normalizeCSV.py [gunakan untuk normalisasi label target menjadi 0/1]
     ├── id3.py [menyimpan algoritma ID3]
     ├── knn.py [menyimpan algoritma KNN]
